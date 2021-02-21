@@ -25,6 +25,9 @@ public class PostController {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    PostCacheervice postCacheervice;
+
     // 1. 글을 작성한다.
     @PostMapping("/post")
     public Post createPost(@RequestBody Post post) throws JsonProcessingException {
@@ -39,9 +42,13 @@ public class PostController {
     @GetMapping("/posts")
     public Page<Post> getPostList(@RequestParam(defaultValue = "1") Integer page) {
 
-        return postRepository.findAll(
-                PageRequest.of(page-1, PAGE_SIZE, Sort.by("id").descending())
-        );
+        if(page.equals(1)) {
+            return postCacheervice.getFirstPostPage();
+        }else{
+            return postRepository.findAll(
+                    PageRequest.of(page-1, PAGE_SIZE, Sort.by("id").descending())
+            );
+        }
     }
 
     // 3. 글 번호로 조회
