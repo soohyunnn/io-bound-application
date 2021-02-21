@@ -32,9 +32,7 @@ public class PostController {
                 PageRequest.of(page-1, PAGE_SIZE, Sort.by("id").descending())
         );
     }
-    
 
-    
     // 3. 글 번호로 조회
     @GetMapping("/post/{id}")
     public Post getPostById(@PathVariable("id") Long id) {
@@ -42,5 +40,9 @@ public class PostController {
     }
     
     // 4. 글 내용으로 검색 -> 해당 내용이 포함된 모든 글
+    @GetMapping("/search")
+    public List<Post> findPostByContent(@RequestParam String content) {
+        return postRepository.findByContentContains(content);
+    }
 
 }
